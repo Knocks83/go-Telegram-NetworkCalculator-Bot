@@ -16,11 +16,11 @@
 package telegram
 
 import (
+	"fmt"
+	"fmt"
 	"go-Telegram-Network-Bot/network"
 	"go-Telegram-Network-bot/config"
-	"strconv"
-	"strings"
-	"fmt"
+	"strconvings"
 
 	//"encoding/binary"
 
@@ -233,8 +233,10 @@ func (tg *Telegram) HandleUpdate(update tgbotapi.Update) {
 
 	// Calculate the network infos
 	if len(update.Message.Text) >= 5 && strings.ToLower(update.Message.Text[0:5]) == "/calc" {
+		// Split the message
 		var args []string = strings.Split(update.Message.Text, " ")
 		if len(args) >= 3 {
+			// Calculate the network infos, convert the variables and send them
 			netInfo := network.CalculateNetwork(args[1], args[2])
 
 			netmask := network.ByteArrToStr(netInfo.Netmask.Dotted)
@@ -242,12 +244,13 @@ func (tg *Telegram) HandleUpdate(update tgbotapi.Update) {
 			networkAddr := network.ByteArrToStr(netInfo.Network)
 			broadcast := network.ByteArrToStr(netInfo.Broadcast)
 			hostMinAddress := network.ByteArrToStr(netInfo.HostMinAddress)
-			hostMaxAddress := network.ByteArrToStr(netInfo.HostMaxAddress)
+			hostMaxAddress := network.ByteArrToStr(netInfo.Hos tMaxAddress) 
 
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID,fmt.Sprintf("Address: %s\nNetmask: %s\nWildcard: %s\nNetwork: %s\nBroadcast: %s\nHost Min Address: %s\nHost Max Address: %s\nHosts quantity: %d",args[1] + "/" + fmt.Sprint(netInfo.Netmask.Decimal), netmask, wildcard, networkAddr, broadcast, hostMinAddress, hostMaxAddress, netInfo.HostsQuantity))
 			_, _ = tg.api.Send(msg)
 		} else {
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Invalid input uwu")
+			// If the args aren't enough, send an error
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Invalid input")
 			msg.ParseMode = tgbotapi.ModeMarkdownV2
 			_, _ = tg.api.Send(msg)
 		}
