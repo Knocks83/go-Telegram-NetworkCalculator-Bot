@@ -17,10 +17,10 @@ package telegram
 
 import (
 	"fmt"
-	"fmt"
 	"go-Telegram-Network-Bot/network"
 	"go-Telegram-Network-bot/config"
-	"strconvings"
+	"strconv"
+	"strings"
 
 	//"encoding/binary"
 
@@ -244,9 +244,9 @@ func (tg *Telegram) HandleUpdate(update tgbotapi.Update) {
 			networkAddr := network.ByteArrToStr(netInfo.Network)
 			broadcast := network.ByteArrToStr(netInfo.Broadcast)
 			hostMinAddress := network.ByteArrToStr(netInfo.HostMinAddress)
-			hostMaxAddress := network.ByteArrToStr(netInfo.Hos tMaxAddress) 
+			hostMaxAddress := network.ByteArrToStr(netInfo.HostMaxAddress)
 
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID,fmt.Sprintf("Address: %s\nNetmask: %s\nWildcard: %s\nNetwork: %s\nBroadcast: %s\nHost Min Address: %s\nHost Max Address: %s\nHosts quantity: %d",args[1] + "/" + fmt.Sprint(netInfo.Netmask.Decimal), netmask, wildcard, networkAddr, broadcast, hostMinAddress, hostMaxAddress, netInfo.HostsQuantity))
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("Address: %s\nNetmask: %s\nWildcard: %s\nNetwork: %s\nBroadcast: %s\nHost Min Address: %s\nHost Max Address: %s\nHosts quantity: %d", args[1]+"/"+fmt.Sprint(netInfo.Netmask.Decimal), netmask, wildcard, networkAddr, broadcast, hostMinAddress, hostMaxAddress, netInfo.HostsQuantity))
 			_, _ = tg.api.Send(msg)
 		} else {
 			// If the args aren't enough, send an error
