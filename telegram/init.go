@@ -17,7 +17,7 @@ package telegram
 
 import (
 	"errors"
-	"go-Telegram-Network-bot/roles"
+	"go-Telegram-NetworkCalculator-bot/roles"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )

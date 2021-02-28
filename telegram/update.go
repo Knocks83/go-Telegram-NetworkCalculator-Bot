@@ -17,8 +17,9 @@ package telegram
 
 import (
 	"fmt"
-	"go-Telegram-Network-Bot/network"
-	"go-Telegram-Network-bot/config"
+	"go-Telegram-NetworkCalculator-Bot/network"
+	"go-Telegram-NetworkCalculator-bot/config"
+	"net"
 	"strconv"
 	"strings"
 
@@ -236,18 +237,23 @@ func (tg *Telegram) HandleUpdate(update tgbotapi.Update) {
 		// Split the message
 		var args []string = strings.Split(update.Message.Text, " ")
 		if len(args) >= 3 {
-			// Calculate the network infos, convert the variables and send them
-			netInfo := network.CalculateNetwork(args[1], args[2])
+			if net.ParseIP(args[1]) != nil && net.ParseIP(args[2]) != nil {
+				// Calculate the network infos, convert the variables and send them
+				netInfo := network.CalculateNetwork(args[1], args[2])
 
-			netmask := network.ByteArrToStr(netInfo.Netmask.Dotted)
-			wildcard := network.ByteArrToStr(netInfo.Wildcard)
-			networkAddr := network.ByteArrToStr(netInfo.Network)
-			broadcast := network.ByteArrToStr(netInfo.Broadcast)
-			hostMinAddress := network.ByteArrToStr(netInfo.HostMinAddress)
-			hostMaxAddress := network.ByteArrToStr(netInfo.HostMaxAddress)
+				netmask := network.ByteArrToStr(netInfo.Netmask.Dotted)
+				wildcard := network.ByteArrToStr(netInfo.Wildcard)
+				networkAddr := network.ByteArrToStr(netInfo.Network)
+				broadcast := network.ByteArrToStr(netInfo.Broadcast)
+				hostMinAddress := network.ByteArrToStr(netInfo.HostMinAddress)
+				hostMaxAddress := network.ByteArrToStr(netInfo.HostMaxAddress)
 
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("Address: %s\nNetmask: %s\nWildcard: %s\nNetwork: %s\nBroadcast: %s\nHost Min Address: %s\nHost Max Address: %s\nHosts quantity: %d", args[1]+"/"+fmt.Sprint(netInfo.Netmask.Decimal), netmask, wildcard, networkAddr, broadcast, hostMinAddress, hostMaxAddress, netInfo.HostsQuantity))
-			_, _ = tg.api.Send(msg)
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("Address: %s\nNetmask: %s\nWildcard: %s\nNetwork: %s\nBroadcast: %s\nHost Min Address: %s\nHost Max Address: %s\nHosts quantity: %d", args[1]+"/"+fmt.Sprint(netInfo.Netmask.Decimal), netmask, wildcard, networkAddr, broadcast, hostMinAddress, hostMaxAddress, netInfo.HostsQuantity))
+				_, _ = tg.api.Send(msg)
+			} else {
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "invalid parameters!")
+				_, _ = tg.api.Send(msg)
+			}
 		} else {
 			// If the args aren't enough, send an error
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Invalid input")

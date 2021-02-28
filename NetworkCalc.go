@@ -17,9 +17,9 @@ package main
 
 import (
 	"fmt"
-	"go-Telegram-Network-bot/config"
-	"go-Telegram-Network-bot/roles"
-	"go-Telegram-Network-bot/telegram"
+	"go-Telegram-NetworkCalculator-bot/config"
+	"go-Telegram-NetworkCalculator-bot/roles"
+	"go-Telegram-NetworkCalculator-bot/telegram"
 	"runtime"
 )
 
